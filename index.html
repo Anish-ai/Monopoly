@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monopoly Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: rgb(255, 255, 255);
+            background-image: url('bg.jpg');
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-left: 5px;
+            margin: 0;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .title {
+            height: auto;
+            width: fit-content;
+            h1 {
+                background: linear-gradient(to right, #ff2424, #304bf9);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            }
+            h4 {
+                color: rgb(0, 0, 0);
+                margin-top: -10px;
+                font-size: large;
+            }
+        }
+
+        .board {
+            width: 600px;
+            height: 600px;
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px;
+            background: rgba(255, 255, 255, 0.388);
+            border: 2px solid #000000;
+            padding: auto;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #000000;
+        }
+
+        .cell {
+            width: calc(100% / 7);
+            height: calc(100% / 7);
+            margin: 6px;
+            box-sizing: border-box;
+            border: 3px solid #848484;
+            position: relative;
+            display: flex;
+            background-color: aqua;
+            border-radius: 10px;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: small;
+            font-weight: bold;
+            box-shadow: 0 0 10px #000000;
+            box-shadow: inset 0 0 5px #8b8b8b;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+
+        .corner {
+            background-color: #00f919;
+            box-shadow: 0 0 10px #2ed33f;
+            color: #000000;
+        }
+
+        .discocell {
+            background-color: #000000;
+            color: red;
+            font-size: larger;
+            border-radius: 0px;
+        }
+
+        .startcell {
+            background-color: #8df4ff;
+            font-size: larger;
+            border-radius: 20px;
+            border: 3px solid #00ffff;
+            box-shadow: 0 0 10px #00e5ff;
+        }
+
+        .property {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #b4b4b4;
+            color: #000000;
+        }
+
+        .player {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 2px;
+        }
+
+        .player1 {
+            background-color: rgba(255, 0, 0);
+            transition: all 0.5s ease-in-out;
+            border: 1px solid #000000;
+            box-shadow: 0 0 3px #000000;
+        }
+
+        .player2 {
+            background-color: rgba(0, 0, 255);
+            transition: all 0.5s ease-in-out;
+            border: 1px solid #000000;
+            box-shadow: 0 0 3px #000000;
+        }
+
+        .controls {
+            margin: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+        }
+
+        #sell-options {
+            display: none;
+        }
+
+        #messages {
+            margin: 20px;
+            height: 600px;
+            width: 350px;
+            overflow-y: auto;
+            border: 1px solid #000;
+            padding: 10px;
+            background-color: #ffffffa3;
+            color: #000000;
+            text-align: center;
+            scrollbar-color: #ffffff #363535;
+            box-shadow: 0 0 10px #000000;
+            scroll-behavior: smooth;
+
+            h2 {
+                margin-top: auto;
+                text-align: center;
+                margin: auto;
+                position: sticky;
+                top: 0;
+            }
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+        }
+
+        .startBTN {
+            background: linear-gradient(to right, #ff5a5a, #5a70ff);
+            color: rgb(0, 0, 0);
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            box-shadow: 0 0 10px #000000;
+        }
+
+        #player1-name {
+            background-color: rgba(255, 55, 0, 0.641);
+            color: #000000;
+            font-size: large;
+            padding: 5px 10px;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        #player2-name {
+            background-color: rgba(0, 128, 255, 0.627);
+            color: #000000;
+            font-size: large;
+            padding: 5px 10px;
+            border: 1px solid #000000;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        .propertyDetails {
+            margin: 20px;
+            width: 400px;
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            padding-top: -5px;
+            text-align: center;
+            border: 3px solid #000000;
+            background: linear-gradient(to bottom, #ffffff7b, #85858575);
+
+            img {
+                box-shadow: 0 0 5px #000000;
+            }
+        }
+
+        .useless {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #property-details p {
+            margin: 5px;
+            color: rgb(0, 0, 0);
+        }
+
+        #property-details img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .rollBtn {
+            color: rgb(0, 0, 0);
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .rolling {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #property-select {
+            background-color: #d0d0d0;
+            color: rgb(0, 0, 0);
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        .sellBtn {
+            color: rgb(0, 0, 0);
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="title">
+        <h1>IITP Monopoly<h4>Let's sell it!</h4>
+        </h1>
+    </div>
+    <div class="start-div">
+        <label for="player1-name" style="font-weight: bold;">Player 1 Name:</label>
+        <input type="text" id="player1-name">
+        <label for="player2-name" style="font-weight: bold;">Player 2 Name:</label>
+        <input type="text" id="player2-name">
+        <button onclick="startGame()" class="startBTN">Start Game</button>
+    </div>
+    <div class="container">
+        <div class="board" id="board"></div>
+        <div class="useless">
+            <div class="propertyDetails">
+                <h2 style="color: rgb(0, 0, 0); margin-top: auto;"><u>Property Details</u></h2>
+                <div id="property-details">
+                    <img src="./Intro.jpg" alt="Property Image" class="property-current-image">
+                    <p class="property-current-price"></p>
+                    <p class="property-current-selling-price"></p>
+                    <p class="property-current-rent"></p>
+                    <p class="property-current-owner"></p>
+                    <p class="property-current-upgrade-level"></p>
+                    <p class="property-current-upgrade-cost"></p>
+                </div>
+
+            </div>
+            <div class="controls">
+                <div class="rolling">
+                    <button onclick="rollDice()" class="rollBtn" disabled="true">Roll Dice</button>
+                    <div style="color: black;">
+                        <p>Dice Result: <span id="dice-result">0</span></p>
+                    </div>
+                </div>
+                <div id="sell-options">
+                    <select id="property-select"></select>
+                    <button onclick="sellProperty()" class="sellBtn">Sell Property</button>
+                </div>
+                <div style="color: #000; font-weight: bolder;">
+                    <p>Player 1 Money: <span id="player1-money">$1500</span></p>
+                    <p>Player 2 Money: <span id="player2-money">$1500</span></p>
+                </div>
+            </div>
+        </div>
+        <div id="messages" class="messages">
+            <div class="bekaar">
+                <h2 style="margin-top: auto;"><u>Game Events</u></h2>
+            </div>
+            <div id="events"></div>
+        </div>
+    </div>
+
+
+    <script>
+        let player1Name = "Player 1";
+        let player2Name = "Player 2";
+        var count = 0;
+
+        const boardElement = document.getElementById('board');
+        const player1 = { element: createPlayerElement('player1'), money: 1500, position: 0, properties: [], inJail: 0 };
+        const player2 = { element: createPlayerElement('player2'), money: 1500, position: 0, properties: [], inJail: 0 };
+
+        let currentPlayer = 1;
+
+        const properties = [
+            { name: 'START', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'Intro.jpg' },
+            { name: 'Cycle Shop', price: 170, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70, imgSrc: 'no.jpg' },
+            { name: 'Ghext Cafe', price: 180, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Tutorial Block', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'tut_block.jpg' },
+            { name: 'Bus Stand 1', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' },
+            { name: 'Admin Build.', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'admin_build.jpg' },
+            { name: 'Angeethi', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'angeethi.jpg' },
+            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'disco.jpg' },
+            { name: 'Nescafe Clh', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'nescafeclh.jpg' },
+            { name: 'Food Court', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'fc.jpg' },
+            { name: 'CV Raman', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'cvr.jpg' },
+            { name: 'Bus Stand 2', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' },
+            { name: 'Aryabhatta', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'aryabhatta.jpg' },
+            { name: 'Kalam', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'kalam.jpg' },
+            { name: 'Bus Stand 3', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' },
+            { name: 'Central Lib', price: 450, rent: 50, owner: null, upgradeLevel: 0, upgradeCost: 180, imgSrc: 'CentralLib.jpg' },
+            { name: 'Director House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170, imgSrc: 'iitpdirector.jpg' },
+            { name: 'Guest House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170, imgSrc: 'guest.jpg' },
+            { name: 'CLH', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140, imgSrc: 'clh.jpg' },
+            { name: 'Incubation Center', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140, imgSrc: 'incubation.jpg' },
+            { name: 'Nescafe 2', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'nescafe2.jpg' },
+            { name: 'Workshops', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'workshop.jpg' },
+            { name: 'Sports Cmplx', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'sports.jpg' },
+            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'disco.jpg' },
+            { name: 'Banjara', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'no.jpg' },
+            { name: 'Gymkhana', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'gymkhana.jpg' },
+            { name: 'Bus Stand 4', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' },
+            { name: 'Block 6', price: 130, rent: 20, owner: null, upgradeLevel: 0, upgradeCost: 50, imgSrc: 'block6.jpg' },
+            { name: 'Block 4', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'block4.jpg' },
+            { name: 'Block 3', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'block3.jpg' },
+            { name: 'Asima', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'asima.jpg' },
+            { name: 'Anti Alcohol', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'no.jpg' }
+        ];
+
+        function createPlayerElement(playerClass) {
+            const playerElement = document.createElement('div');
+            playerElement.classList.add('player', playerClass);
+            return playerElement;
+        }
+
+        function setupBoard() {
+            properties.forEach((property, index) => {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                if (property.price > 0) {
+                    cell.classList.add('property');
+                    cell.innerText = `${property.name}\n$${property.price}`;
+                } else if (property.name === 'DISCO') {
+                    cell.classList.add('discocell');
+                    cell.innerText = property.name;
+                } else if (property.name === 'START') {
+                    cell.classList.add('startcell');
+                    cell.innerText = `${property.name}\n+300$`;
+                } else {
+                    cell.classList.add('corner');
+                    cell.innerText = property.name;
+                }
+                boardElement.appendChild(cell);
+            });
+
+            document.querySelectorAll('.property, .corner, .startcell, .discocell').forEach((cell, index) => {
+                if (index === player1.position) {
+                    cell.appendChild(player1.element);
+                }
+                if (index === player2.position) {
+                    cell.appendChild(player2.element);
+                }
+                player1.element.style.left = '20%';
+                player2.element.style.right = '20%';
+            });
+        }
+
+        function startGame() {
+            document.querySelector('.startBTN').disabled = true;
+            player1Name = document.getElementById('player1-name').value || "Player 1";
+            player2Name = document.getElementById('player2-name').value || "Player 2";
+            document.getElementById('player1-money').innerText = `$${player1.money}`;
+            document.getElementById('player2-money').innerText = `$${player2.money}`;
+            document.querySelector('.rollBtn').style.backgroundColor = 'rgba(255, 0, 0, 0.5)';
+            document.querySelector('.rollBtn').style.border = '2px solid red';
+            document.querySelector('.rollBtn').disabled = false;
+            document.querySelector('.start-div').style.display = 'none';
+            setupBoard();
+        }
+
+        function rollDice() {
+            const player = currentPlayer === 1 ? player1 : player2;
+            const playerName = currentPlayer === 1 ? player1Name : player2Name;
+            document.querySelector('.rollBtn').style.backgroundColor = currentPlayer === 1 ? 'rgba(0, 0, 255, 0.5)' : 'rgba(255, 0, 0, 0.5)';
+            document.querySelector('.rollBtn').style.border = currentPlayer === 1 ? '2px solid blue' : '2px solid red';
+            document.querySelector('.sellBtn').style.backgroundColor = currentPlayer === 1 ? 'rgba(0, 0, 255, 0.5)' : 'rgba(255, 0, 0, 0.5)';
+            document.querySelector('.sellBtn').style.border = currentPlayer === 1 ? '2px solid blue' : '2px solid red';
+
+            if (player.inJail > 0) {
+                player.inJail -= 1;
+                addMessage(`${playerName} is in DISCO for ${player.inJail} more turn(s).`);
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                return;
+            }
+
+            const diceResult = Math.floor(Math.random() * 6) + 1;
+            document.getElementById('dice-result').innerText = diceResult;
+            count = diceResult;
+            for (let i = 0; i < diceResult; i++) {
+                document.querySelector('.rollBtn').disabled = true;
+                setTimeout(() => {
+                    count -= 1;
+                    movePlayer(1);
+                }, i * 250);
+            }
+        }
+
+        function movePlayer(steps) {
+            const player = currentPlayer === 1 ? player1 : player2;
+            const otherplayer = currentPlayer === 1 ? player2 : player1;
+            const playerName = currentPlayer === 1 ? player1Name : player2Name;
+
+            player.position = (player.position + steps) % properties.length;
+
+            const newPositionCell = document.querySelector(`.cell:nth-child(${player.position + 1})`);
+            newPositionCell.appendChild(player.element);
+            player.element.style.transform = 'scale(1.5)';
+            player.element.style.transition = 'transform 0.2s';
+            setTimeout(() => {
+                player.element.style.transform = 'scale(1)';
+                player.element.style.transition = 'transform 0.2s';
+            }, 100);
+            if (player.position === otherplayer.position) {
+                player.element.style.left = '20%';
+                otherplayer.element.style.right = '20%';
+            } else {
+                player.element.style.left = 'auto';
+                otherplayer.element.style.right = 'auto';
+            }
+            if (player.position === 0) {
+                player.money += 300;
+                document.getElementById(`player${currentPlayer}-money`).innerText = `$${player.money}`;
+                addMessage(`${playerName} has passed START and received $300.`);
+            }
+            if (count === 0) {
+                handleProperty(player, properties[player.position]);
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                document.querySelector('.rollBtn').disabled = false;
+                populateSellOptions();
+            }
+        }
+
+        function handleProperty(player, property) {
+            const playerName = currentPlayer === 1 ? player1Name : player2Name;
+            const otherPlayerName = currentPlayer === 1 ? player2Name : player1Name;
+
+            if (property.owner === null && property.price > 0) {
+                if (player.money >= property.price) {
+                    if (confirm(`Do you want to buy ${property.name} for $${property.price}?`)) {
+                        player.money -= property.price;
+                        property.owner = currentPlayer;
+                        player.properties.push(property);
+                        document.getElementById(`player${currentPlayer}-money`).innerText = `$${player.money}`;
+                        addMessage(`${property.name} has been bought for $${property.price} by ${playerName}.`);
+                        updatePropertyOwnership();
+                    }
+                }
+            } else if (property.owner !== currentPlayer && property.owner !== null) {
+                const rent = property.rent + (property.upgradeLevel * property.rent);
+                if (player.money >= rent) {
+                    player.money -= rent;
+                    const otherPlayer = property.owner === 1 ? player1 : player2;
+                    otherPlayer.money += rent;
+                    document.getElementById(`player${currentPlayer}-money`).innerText = `$${player.money}`;
+                    document.getElementById(`player${property.owner}-money`).innerText = `$${otherPlayer.money}`;
+                    addMessage(`${playerName} paid $${rent} rent to ${otherPlayerName}.`);
+                } else {
+                    addMessage(`${playerName} cannot afford the rent. Game over for ${playerName}.`);
+                    gameOver(currentPlayer);
+                }
+            } else if (property.owner === currentPlayer) {
+                if (confirm(`Do you want to upgrade ${property.name} for $${property.upgradeCost}?`)) {
+                    if (player.money >= property.upgradeCost) {
+                        player.money -= property.upgradeCost;
+                        property.upgradeLevel += 1;
+                        document.getElementById(`player${currentPlayer}-money`).innerText = `$${player.money}`;
+                        addMessage(`${property.name} has been upgraded to level ${property.upgradeLevel}.`);
+                        updatePropertyOwnership();
+                    } else {
+                        addMessage(`Not enough money to upgrade ${property.name}.`);
+                    }
+                }
+            } else if (property.name === 'DISCO') {
+                player.inJail = 3;
+                addMessage(`${playerName} is in DISCO for 3 turns.`);
+            }
+        }
+
+        function populateSellOptions() {
+            const player = currentPlayer === 1 ? player1 : player2;
+            const select = document.getElementById('property-select');
+            select.innerHTML = '';
+            player.properties.forEach((property, index) => {
+                const option = document.createElement('option');
+                option.value = properties.indexOf(property);
+                option.text = property.name;
+                select.appendChild(option);
+            });
+            document.getElementById('sell-options').style.display = player.properties.length > 0 ? 'block' : 'none';
+        }
+
+        function sellProperty() {
+            const player = currentPlayer === 1 ? player1 : player2;
+            const propertyIndex = document.getElementById('property-select').value;
+            const property = properties[propertyIndex];
+            if (property.owner === currentPlayer) {
+                const sellPrice = property.price + (property.upgradeLevel * property.upgradeCost * 0.5);
+                player.money += sellPrice;
+                property.owner = null;
+                property.upgradeLevel = 0;
+                player.properties = player.properties.filter(p => p !== property);
+                document.getElementById(`player${currentPlayer}-money`).innerText = `$${player.money}`;
+                addMessage(`${property.name} has been sold for $${sellPrice}.`);
+                updatePropertyOwnership();
+                populateSellOptions();
+            }
+
+        }
+
+        function updatePropertyOwnership() {
+            properties.forEach((property, index) => {
+                const cell = document.querySelector(`.cell:nth-child(${index + 1})`);
+                if (property.owner === 1) {
+                    cell.style.backgroundColor = 'rgba(255, 90, 90, 0.5)';
+                    cell.style.boxShadow = '0 0 10px rgba(255, 0, 0)';
+                    cell.style.border = '3px solid #ff0000';
+                } else if (property.owner === 2) {
+                    cell.style.backgroundColor = 'rgba(90, 90, 255, 0.5)';
+                    cell.style.boxShadow = '0 0 10px rgba(0, 0, 255)';
+                    cell.style.border = '3px solid #0000ff';
+                } else {
+                    cell.style.backgroundColor = '';
+                    cell.style.boxShadow = '';
+                    cell.style.border = '';
+                }
+            });
+        }
+
+        function gameOver(player) {
+            const playerName = player === 1 ? player1Name : player2Name;
+            addMessage(`${playerName} has lost the game!`);
+            alert(`${playerName} has lost the game!\nRefresh the page to start a new game.`);
+            document.querySelector('.rollBtn').disabled = true;
+            document.querySelector('.sellBtn').disabled = true;
+        }
+
+        function addMessage(message) {
+            const events = document.getElementById('events');
+            const eventMessage = document.createElement('p');
+            eventMessage.innerText = message;
+            events.appendChild(eventMessage);
+            events.scrollTop = events.scrollHeight;
+            document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+        }
+        function displayPropertyDetails() {
+            const propertyDetails = document.getElementById('property-details');
+            const propertyCurrentImage = propertyDetails.querySelector('.property-current-image');
+            const propertyCurrentPrice = propertyDetails.querySelector('.property-current-price');
+            const propertyCurrentSellingPrice = propertyDetails.querySelector('.property-current-selling-price');
+            const propertyCurrentRent = propertyDetails.querySelector('.property-current-rent');
+            const propertyCurrentOwner = propertyDetails.querySelector('.property-current-owner');
+            const propertyCurrentUpgradeLevel = propertyDetails.querySelector('.property-current-upgrade-level');
+            const propertyCurrentUpgradeCost = propertyDetails.querySelector('.property-current-upgrade-cost');
+
+            boardElement.addEventListener('mouseover', (event) => {
+                const cell = event.target.closest('.cell');
+                if (cell) {
+                    cell.style.transform = 'scale(1.1)';
+                    cell.style.transition = 'transform 0.3s';
+                }
+
+                if (cell) {
+                    const index = Array.from(cell.parentNode.children).indexOf(cell);
+                    const property = properties[index];
+                    if (property) {
+                        propertyCurrentImage.src = property.imgSrc;
+                        propertyCurrentPrice.innerText = `Price: $${property.price}`;
+                        propertyCurrentSellingPrice.innerText = `Selling Price: $${property.price + (property.upgradeLevel * property.upgradeCost * 0.5)}`;
+                        propertyCurrentRent.innerText = `Rent: $${property.rent + (property.upgradeLevel * property.rent)}`;
+                        propertyCurrentOwner.innerText = `Owner: ${property.owner ? (property.owner === 1 ? player1Name : player2Name) : 'None'}`;
+                        propertyCurrentUpgradeLevel.innerText = `Upgrade Level: ${property.upgradeLevel}`;
+                        propertyCurrentUpgradeCost.innerText = `Upgrade Cost: $${property.upgradeCost}`;
+                    }
+                }
+            });
+            boardElement.addEventListener('mouseout', (event) => {
+                const cell = event.target.closest('.cell');
+                if (cell) {
+                    cell.style.transform = 'scale(1)';
+                    cell.style.transition = 'transform 0.3s';
+                }
+                propertyCurrentImage.src = './Intro.jpg';
+                propertyCurrentPrice.innerText = '';
+                propertyCurrentSellingPrice.innerText = '';
+                propertyCurrentRent.innerText = '';
+                propertyCurrentOwner.innerText = '';
+                propertyCurrentUpgradeLevel.innerText = '';
+                propertyCurrentUpgradeCost.innerText = '';
+
+            });
+        }
+        displayPropertyDetails();
+    </script>
+</body>
+
+</html>
